@@ -1,0 +1,31 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+:root {
+  --background: var(--admin-bg);
+  --foreground: var(--kiswa-black);
+  --card: var(--admin-card);
+  --card-foreground: var(--kiswa-black);
+  --border: var(--kiswa-gray-border);
+  --radius: 0.5rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --radius-md: var(--radius);
+  --color-success: var(--admin-success);
+  --color-warning: var(--admin-warning);
+  --color-error: var(--admin-error);
+}
+
+* {
+  @apply border-border;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+}
