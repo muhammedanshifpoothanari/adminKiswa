@@ -10,15 +10,26 @@ import {
     Settings,
     MessageSquare,
     LogOut,
-    ChevronRight
+    ChevronRight,
+    BarChart3,
+    Package,
+    ListTree,
+    UserCircle,
+    ShieldCheck,
+    Megaphone
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const navItems = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard },
-    { name: "Products", href: "/products", icon: ShoppingBag },
-    { name: "Orders", href: "/orders", icon: MessageSquare },
-    { name: "Customers", href: "/customers", icon: Users },
+    { name: "Analytics", href: "/analytics", icon: BarChart3 },
+    { name: "CRM", href: "/crm", icon: Users },
+    { name: "Outreach", href: "/outreach", icon: Megaphone },
+    { name: "Products", href: "/products", icon: Package },
+    { name: "Categories", href: "/categories", icon: ListTree },
+    { name: "Orders", href: "/orders", icon: ShoppingBag },
+    { name: "Customers", href: "/customers", icon: UserCircle },
+    { name: "Employees", href: "/employees", icon: ShieldCheck },
     { name: "Settings", href: "/settings", icon: Settings },
 ]
 
