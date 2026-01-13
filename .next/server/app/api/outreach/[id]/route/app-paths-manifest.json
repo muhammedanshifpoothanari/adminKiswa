@@ -1,0 +1,3 @@
+{
+  "/api/outreach/[id]/route": "app/api/outreach/[id]/route.js"
+}

@@ -16,7 +16,7 @@ interface OrderType {
     _id: string;
     orderNumber: string;
     customer: { _id: string; firstName: string; lastName: string; email: string } | null;
-    items: { product: string; name: string; quantity: number; price: number; total: number }[];
+    items: { product: string; name: string; quantity: number; price: number; total: number; image?: string }[];
     subtotal: number;
     tax: number;
     shippingCost: number;
@@ -347,24 +347,88 @@ export default function OrdersPage() {
                                 </div>
                             </div>
 
+                            <div className="grid grid-cols-2 gap-4 border-t pt-4">
+                                <div className="space-y-2">
+                                    <Label>Order Status</Label>
+                                    <Select
+                                        value={selectedOrder.status}
+                                        onValueChange={async (val) => {
+                                            // Optimistic update
+                                            const updated = { ...selectedOrder, status: val };
+                                            setSelectedOrder(updated as OrderType); // Cast needed if types mismatch slightly
+
+                                            // API Call
+                                            await fetch('/api/orders', {
+                                                method: 'PUT',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({ _id: selectedOrder._id, status: val })
+                                            });
+                                            fetchOrders(); // Refresh list background
+                                        }}
+                                    >
+                                        <SelectTrigger><SelectValue /></SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="pending">Pending</SelectItem>
+                                            <SelectItem value="processing">Processing</SelectItem>
+                                            <SelectItem value="shipped">Shipped</SelectItem>
+                                            <SelectItem value="delivered">Delivered</SelectItem>
+                                            <SelectItem value="cancelled">Cancelled</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Payment Status</Label>
+                                    <Select
+                                        value={selectedOrder.paymentStatus}
+                                        onValueChange={async (val) => {
+                                            const updated = { ...selectedOrder, paymentStatus: val };
+                                            setSelectedOrder(updated as OrderType);
+
+                                            await fetch('/api/orders', {
+                                                method: 'PUT',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({ _id: selectedOrder._id, paymentStatus: val })
+                                            });
+                                            fetchOrders();
+                                        }}
+                                    >
+                                        <SelectTrigger><SelectValue /></SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="pending">Pending</SelectItem>
+                                            <SelectItem value="paid">Paid</SelectItem>
+                                            <SelectItem value="failed">Failed</SelectItem>
+                                            <SelectItem value="refunded">Refunded</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+
                             <div className="border-t pt-4">
                                 <h4 className="font-semibold mb-2">Items</h4>
                                 <table className="w-full text-sm">
                                     <thead>
                                         <tr className="border-b">
-                                            <th className="text-left py-1">Product</th>
-                                            <th className="text-center py-1">Qty</th>
-                                            <th className="text-right py-1">Price</th>
-                                            <th className="text-right py-1">Total</th>
+                                            <th className="py-2 w-12"></th>
+                                            <th className="text-left py-2">Product</th>
+                                            <th className="text-center py-2">Qty</th>
+                                            <th className="text-right py-2">Price</th>
+                                            <th className="text-right py-2">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {selectedOrder.items?.map((item, i) => (
                                             <tr key={i} className="border-b">
-                                                <td className="py-1">{item.name}</td>
-                                                <td className="text-center py-1">{item.quantity}</td>
-                                                <td className="text-right py-1">SAR {item.price}</td>
-                                                <td className="text-right py-1">SAR {item.total}</td>
+                                                <td className="py-2">
+                                                    {item.image ? (
+                                                        <img src={item.image} alt="" className="w-10 h-10 object-cover rounded bg-gray-100" />
+                                                    ) : (
+                                                        <div className="w-10 h-10 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-400">IMG</div>
+                                                    )}
+                                                </td>
+                                                <td className="py-2">{item.name}</td>
+                                                <td className="text-center py-2">{item.quantity}</td>
+                                                <td className="text-right py-2">SAR {item.price}</td>
+                                                <td className="text-right py-2">SAR {item.total}</td>
                                             </tr>
                                         ))}
                                     </tbody>

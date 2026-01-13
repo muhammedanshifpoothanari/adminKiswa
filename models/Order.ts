@@ -22,6 +22,8 @@ export interface IOrder extends Document {
         country: string;
     };
     notes?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 const OrderSchema = new Schema<IOrder>({

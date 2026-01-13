@@ -26,6 +26,8 @@ interface ProductType {
     images: string[];
     specifications: Record<string, string>;
     isPublished: boolean;
+    isFeatured: boolean;
+    isBestSeller: boolean;
 }
 
 interface CategoryType {
@@ -56,7 +58,9 @@ export default function ProductsPage() {
         categoryId: '',
         images: [''],
         specifications: [{ key: '', value: '' }],
-        isPublished: true
+        isPublished: true,
+        isFeatured: false,
+        isBestSeller: false
     });
 
     const [editId, setEditId] = useState<string | null>(null);
@@ -102,7 +106,9 @@ export default function ProductsPage() {
                 category: formData.categoryId,
                 images: formData.images.filter(i => i.trim()),
                 specifications: specsObj,
-                isPublished: formData.isPublished
+                isPublished: formData.isPublished,
+                isFeatured: formData.isFeatured,
+                isBestSeller: formData.isBestSeller
             };
 
             const res = await fetch(url, {
@@ -133,7 +139,8 @@ export default function ProductsPage() {
         setFormData({
             name: '', slug: '', sku: '', description: '', features: [''],
             price: 0, currency: 'SAR', stock: 0, inStock: true, categoryId: '',
-            images: [''], specifications: [{ key: '', value: '' }], isPublished: true
+            images: [''], specifications: [{ key: '', value: '' }],
+            isPublished: true, isFeatured: false, isBestSeller: false
         });
         setEditId(null);
     }
@@ -152,7 +159,9 @@ export default function ProductsPage() {
             categoryId: product.category?._id || '',
             images: product.images?.length ? product.images : [''],
             specifications: Object.entries(product.specifications || {}).map(([key, value]) => ({ key, value })),
-            isPublished: product.isPublished
+            isPublished: product.isPublished,
+            isFeatured: product.isFeatured || false,
+            isBestSeller: product.isBestSeller || false
         });
         setEditId(product._id);
         setOpen(true);
@@ -276,6 +285,40 @@ export default function ProductsPage() {
                                 <div className="space-y-2">
                                     <Label>Description</Label>
                                     <Textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} rows={3} />
+                                </div>
+
+                                {/* Status & Highlights */}
+                                <div className="grid grid-cols-3 gap-4 p-4 border rounded-lg bg-gray-50">
+                                    <div className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            id="isPublished"
+                                            checked={formData.isPublished}
+                                            onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })}
+                                            className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
+                                        />
+                                        <Label htmlFor="isPublished" className="cursor-pointer">Published</Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            id="isFeatured"
+                                            checked={formData.isFeatured}
+                                            onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
+                                            className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
+                                        />
+                                        <Label htmlFor="isFeatured" className="cursor-pointer">Featured</Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            id="isBestSeller"
+                                            checked={formData.isBestSeller}
+                                            onChange={(e) => setFormData({ ...formData, isBestSeller: e.target.checked })}
+                                            className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
+                                        />
+                                        <Label htmlFor="isBestSeller" className="cursor-pointer">Best Seller</Label>
+                                    </div>
                                 </div>
 
                                 {/* Features */}
