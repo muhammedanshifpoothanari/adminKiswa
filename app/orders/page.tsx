@@ -23,6 +23,7 @@ interface OrderType {
     total: number;
     status: string;
     paymentStatus: string;
+    paymentMethod: string;
     shippingAddress: { street: string; city: string; country: string };
     notes: string;
     createdAt: string;
@@ -55,7 +56,8 @@ export default function OrdersPage() {
         shippingAddress: { street: '', city: '', country: '' },
         notes: '',
         status: 'pending',
-        paymentStatus: 'pending'
+        paymentStatus: 'pending',
+        paymentMethod: 'COD'
     });
 
     useEffect(() => {
@@ -102,6 +104,7 @@ export default function OrdersPage() {
             total: subtotal,
             status: formData.status,
             paymentStatus: formData.paymentStatus,
+            paymentMethod: formData.paymentMethod,
             shippingAddress: formData.shippingAddress,
             notes: formData.notes
         };
@@ -126,7 +129,8 @@ export default function OrdersPage() {
             shippingAddress: { street: '', city: '', country: '' },
             notes: '',
             status: 'pending',
-            paymentStatus: 'pending'
+            paymentStatus: 'pending',
+            paymentMethod: 'COD'
         });
     }
 
@@ -267,6 +271,17 @@ export default function OrdersPage() {
                                         </SelectContent>
                                     </Select>
                                 </div>
+                                <div className="space-y-2">
+                                    <Label>Payment Method</Label>
+                                    <Select value={formData.paymentMethod} onValueChange={val => setFormData({ ...formData, paymentMethod: val })}>
+                                        <SelectTrigger><SelectValue /></SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="COD">Cash on Delivery</SelectItem>
+                                            <SelectItem value="Bank Transfer">Bank Transfer</SelectItem>
+                                            <SelectItem value="Card">Card / Online</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                             </div>
 
                             {/* Notes */}
@@ -293,7 +308,8 @@ export default function OrdersPage() {
                                 <TableHead>Customer</TableHead>
                                 <TableHead>Date</TableHead>
                                 <TableHead>Status</TableHead>
-                                <TableHead>Payment</TableHead>
+                                <TableHead>Payment Status</TableHead>
+                                <TableHead>Method</TableHead>
                                 <TableHead className="text-right">Total</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
@@ -315,6 +331,7 @@ export default function OrdersPage() {
                                         <Badge variant={getStatusColor(order.status) as any}>{order.status}</Badge>
                                     </TableCell>
                                     <TableCell>{order.paymentStatus}</TableCell>
+                                    <TableCell className="text-xs">{order.paymentMethod}</TableCell>
                                     <TableCell className="text-right font-medium">SAR {order.total?.toFixed(2)}</TableCell>
                                     <TableCell className="text-right">
                                         <Button variant="ghost" size="icon" onClick={() => { setSelectedOrder(order); setViewOpen(true); }}>
@@ -344,6 +361,10 @@ export default function OrdersPage() {
                                 <div>
                                     <p className="text-sm text-muted-foreground">Date</p>
                                     <p>{new Date(selectedOrder.createdAt).toLocaleString()}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Payment Method</p>
+                                    <p className="font-medium underline decoration-dotted">{selectedOrder.paymentMethod}</p>
                                 </div>
                             </div>
 

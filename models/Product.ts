@@ -17,6 +17,7 @@ export interface IProduct extends Document {
     specifications: Map<string, string>;
     isPublished: boolean;
     isFeatured: boolean;
+    isBestSeller: boolean;
 }
 
 const ProductSchema = new Schema<IProduct>({
@@ -35,7 +36,8 @@ const ProductSchema = new Schema<IProduct>({
     images: [{ type: String }],
     specifications: { type: Map, of: String },
     isPublished: { type: Boolean, default: false },
-    isFeatured: { type: Boolean, default: false }
+    isFeatured: { type: Boolean, default: false },
+    isBestSeller: { type: Boolean, default: false }
 }, { timestamps: true });
 
 const Product: Model<IProduct> = mongoose.models.Product || mongoose.model<IProduct>('Product', ProductSchema);

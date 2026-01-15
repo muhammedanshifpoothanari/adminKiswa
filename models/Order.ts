@@ -6,6 +6,7 @@ export interface IOrder extends Document {
     items: {
         product: mongoose.Types.ObjectId;
         name: string;
+        image: string;
         quantity: number;
         price: number;
         total: number;
@@ -16,6 +17,7 @@ export interface IOrder extends Document {
     total: number;
     status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
     paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
+    paymentMethod: string;
     shippingAddress: {
         street: string;
         city: string;
@@ -32,6 +34,7 @@ const OrderSchema = new Schema<IOrder>({
     items: [{
         product: { type: Schema.Types.ObjectId, ref: 'Product' },
         name: String,
+        image: String,
         quantity: Number,
         price: Number,
         total: Number
@@ -42,6 +45,7 @@ const OrderSchema = new Schema<IOrder>({
     total: { type: Number, required: true },
     status: { type: String, enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded'], default: 'pending' },
     paymentStatus: { type: String, enum: ['pending', 'paid', 'failed', 'refunded'], default: 'pending' },
+    paymentMethod: { type: String, required: true },
     shippingAddress: {
         street: String,
         city: String,
